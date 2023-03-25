@@ -35,22 +35,26 @@ public class GameMain extends JPanel implements StateTransition {
    public static final Font FONT_GAMEOVER = new Font("Verdana", Font.BOLD, 30);
    public static final Color COLOR_INSTRUCTION = Color.RED;
    public static final Font FONT_INSTRUCTION = new Font("Dialog", Font.PLAIN, 26);
-   public static final Color COLOR_DATA = Color.WHITE;
+   public static final Color COLOR_DATA = Color.RED;
    public static final Font FONT_DATA = new Font(Font.MONOSPACED, Font.PLAIN, 16);
 
    // == Define game objects ==
    private Matrix matrix;
    private GamePanel pit;
-
+   private int score=0;
+   private int time=0;
+   private int totalRows=0;
+   private int level =1;
+   private int previousScore;
    /** Current state of the game */
    private State currentState;
 
    /** Game step timer */
    private Timer stepTimer;
    /** Number of game steps per second */
-   public static final int STEPS_PER_SEC = 6;
+   public static int STEPS_PER_SEC = 6;
    /** Step in mini-seconds */
-   public static final int STEP_IN_MSEC = 1000 / STEPS_PER_SEC;
+   public static int STEP_IN_MSEC = 1000 / STEPS_PER_SEC;
 
    /**
     * Constructor to initialize the UI components and game objects
@@ -103,17 +107,18 @@ public class GameMain extends JPanel implements StateTransition {
                switch (key) {
                   case KeyEvent.VK_UP:
                      matrix.stepGame(Action.ROTATE_RIGHT);
-                     repaint(); break;
+                      break;
                   case KeyEvent.VK_DOWN:
                      matrix.stepGame(Action.DOWN);
-                     repaint(); break;
+                     break;
                   case KeyEvent.VK_LEFT:
                      matrix.stepGame(Action.LEFT);
-                     repaint(); break;
+                     break;
                   case KeyEvent.VK_RIGHT:
                      matrix.stepGame(Action.RIGHT);
-                     repaint(); break;
+                     break;
                }
+               repaint();
             } else if (currentState == State.GAMEOVER) {
                // Any keys to re-start the game
                newGame();
@@ -170,10 +175,17 @@ public class GameMain extends JPanel implements StateTransition {
     * Run one step of the game. Fire by the step timer at constant rate.
     */
    public void stepGame() {
+
+      time++;
       if (currentState != State.PLAYING)
          throw new IllegalStateException("Cannot run stepGame() in state " + currentState);
       if(matrix.stepGame(Action.DOWN)){
-         matrix.lockDown();
+         totalRows += matrix.lockDown();
+         score = totalRows *100;
+         if(totalRows != 0 && previousScore != score && totalRows%1 ==0 ){
+            speedup();
+         }
+         previousScore = score;
       }
 
       // // Check if the snake moves out of the pit
@@ -189,6 +201,12 @@ public class GameMain extends JPanel implements StateTransition {
       // }
 
       repaint();
+   }
+
+   private void speedup() {
+      matrix.speedUp();
+      STEPS_PER_SEC*=1.8;
+      level++;
    }
 
    /**
@@ -215,8 +233,10 @@ public class GameMain extends JPanel implements StateTransition {
          g.setFont(FONT_DATA);
          g.setColor(COLOR_DATA);
          //stats
-         // g.drawString("Snake Head: (" + snake.getHeadX() + "," + snake.getHeadY() + ")", 10, 25);
-         // g.drawString("Snake Length: " + snake.getLength(), 10, 45);
+         g.drawString("Timer: " + time/STEPS_PER_SEC, 350, 25);
+         g.drawString("Score: " + score, 350, 45);
+         g.drawString("Total Rows cleared: " + totalRows, 350, 65);
+         g.drawString("Level: " + level, 350, 85);
          // g.drawString("Food: (" + food.x + "," + food.y + ")", 10, 65);
          // g.drawString("Eaten: " + food.foodEaten, 10, 85);
 

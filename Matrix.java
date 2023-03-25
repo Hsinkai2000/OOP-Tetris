@@ -23,6 +23,7 @@ public class Matrix implements StateTransition {
    boolean map[][] = new boolean[ROWS][COLS];
    // Property 2: The board has ONE falling shape
    Shape shape;
+   private int speed =1;
 
    /**
     * Constructor
@@ -71,18 +72,18 @@ public class Matrix implements StateTransition {
          case HARD_DROP: // Handle as FAST "down" in GameMain class for better visual
 
          case SOFT_DROP: // Handle as FAST "down" in GameMain class for better visual
-            shape.y+=2;
+            shape.y+=speed*2;
             if (!actionAllowed()) {
                // At bottom, cannot move down further. To lock down this block
-               shape.y-=2;    // undo the move
+               shape.y-=speed*2;    // undo the move
                return true;
             }
             break;
          case DOWN:
-            shape.y++;
+            shape.y+=speed;
             if (!actionAllowed()) {
                // At bottom, cannot move down further. To lock down this block
-               shape.y--;    // undo the move
+               shape.y-=speed;    // undo the move
                return true;
             }
             break;
@@ -196,5 +197,9 @@ public class Matrix implements StateTransition {
 
       // Also paint the Shape encapsulated
       shape.paint(g);
+   }
+
+   public void speedUp() {
+      speed *= 1.8;
    }
 }
