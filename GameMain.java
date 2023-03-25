@@ -175,6 +175,10 @@ public class GameMain extends JPanel implements StateTransition {
       if(matrix.stepGame(Action.DOWN)){
          matrix.lockDown();
       }
+      if(matrix.isFull()){
+         stopGame();  // gameover
+         return;
+      }
 
       // // Check if the snake moves out of the pit
       // if (!pit.contains(headX, headY)) {
