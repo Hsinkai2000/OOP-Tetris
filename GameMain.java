@@ -21,7 +21,7 @@ public class GameMain extends JPanel implements StateTransition {
    /** Number of columns of the game board (in cells) */
    public static final int COLS = 40;
    /** Size of the body cell (in pixels) */
-   public static final int CELL_SIZE = 15;
+   public static final int CELL_SIZE = 16;
 
    /** App title */
    public static final String TITLE = "Snake";
@@ -172,7 +172,9 @@ public class GameMain extends JPanel implements StateTransition {
    public void stepGame() {
       if (currentState != State.PLAYING)
          throw new IllegalStateException("Cannot run stepGame() in state " + currentState);
-      matrix.stepGame(Action.DOWN);
+      if(matrix.stepGame(Action.DOWN)){
+         matrix.lockDown();
+      }
 
       // // Check if the snake moves out of the pit
       // if (!pit.contains(headX, headY)) {
