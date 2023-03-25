@@ -113,6 +113,9 @@ public class GameMain extends JPanel implements StateTransition {
                   case KeyEvent.VK_RIGHT:
                      matrix.stepGame(Action.RIGHT);
                      repaint(); break;
+                  case KeyEvent.VK_SPACE:
+                     matrix.stepGame(Action.HARD_DROP);
+                     repaint(); break;
                }
             } else if (currentState == State.GAMEOVER) {
                // Any keys to re-start the game

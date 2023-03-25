@@ -69,7 +69,13 @@ public class Matrix implements StateTransition {
             if (!actionAllowed()) shape.undoRotate();  // undo the move
             break;
          case HARD_DROP: // Handle as FAST "down" in GameMain class for better visual
-
+            while(true){
+               shape.y++;
+               if(!actionAllowed()){
+                  shape.y--;
+                  return true;
+               }
+            }
          case SOFT_DROP: // Handle as FAST "down" in GameMain class for better visual
             shape.y+=2;
             if (!actionAllowed()) {
