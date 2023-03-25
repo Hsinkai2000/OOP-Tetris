@@ -185,7 +185,7 @@ public class GameMain extends JPanel implements StateTransition {
       if(matrix.stepGame(Action.DOWN)){
          totalRows += matrix.lockDown();
          score = totalRows *100;
-         if(totalRows != 0 && previousScore != score && totalRows%1 ==0 ){
+         if(totalRows != 0 && previousScore != score && totalRows%5 ==0 ){
             speedup();
          }
          previousScore = score;
