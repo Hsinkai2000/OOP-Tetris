@@ -70,7 +70,13 @@ public class Matrix implements StateTransition {
             if (!actionAllowed()) shape.undoRotate();  // undo the move
             break;
          case HARD_DROP: // Handle as FAST "down" in GameMain class for better visual
-
+            while(true){
+               shape.y++;
+               if(!actionAllowed()){
+                  shape.y--;
+                  return true;
+               }
+            }
          case SOFT_DROP: // Handle as FAST "down" in GameMain class for better visual
             shape.y+=speed*2;
             if (!actionAllowed()) {
@@ -92,6 +98,7 @@ public class Matrix implements StateTransition {
       return false;  // not reach the bottom
       
    }
+   
 
    /**
     * Check if the shape moves outside the matrix,
@@ -114,6 +121,13 @@ public class Matrix implements StateTransition {
       return true;
    }
 
+   public boolean isFull(){
+      for (int col = 0; col < COLS; col++){
+         if (map[0][col] == true)
+         return true;
+      }
+      return false;
+   }
    /**
     * Lock down the block, by transfer the block's content to the matrix.
     * Also clear filled lines, if any.

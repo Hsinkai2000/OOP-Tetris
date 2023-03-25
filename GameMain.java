@@ -117,6 +117,9 @@ public class GameMain extends JPanel implements StateTransition {
                   case KeyEvent.VK_RIGHT:
                      matrix.stepGame(Action.RIGHT);
                      break;
+                  case KeyEvent.VK_SPACE:
+                     matrix.stepGame(Action.HARD_DROP);
+                     break;
                }
                repaint();
             } else if (currentState == State.GAMEOVER) {
@@ -186,6 +189,10 @@ public class GameMain extends JPanel implements StateTransition {
             speedup();
          }
          previousScore = score;
+      }
+      if(matrix.isFull()){
+         stopGame();  // gameover
+         return;
       }
 
       // // Check if the snake moves out of the pit
